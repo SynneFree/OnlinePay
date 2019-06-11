@@ -24,7 +24,7 @@
         - [x]  comment_review.html
 - [x]  翻译网页
     - [x]  英转繁 - 廖
-    - [ ]  繁转简 - 曾
+    - [x]  繁转简 - 曾
 - [x]  设立GitHub Repo -曾
 - [ ]  设立云数据库 - 曾
 - [ ]  设置Flask数据库连接 - 曾
