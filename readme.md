@@ -112,3 +112,14 @@
     pip install guess_language
     pip install flipflop
     pip install coverage
+    
+    
+#运行Flask 服务器访问网站
+打开终端，在目录下 ，运行
+
+```
+./run.py
+```
+
+然后浏览器访问 127.0.0.1:5000/
+
