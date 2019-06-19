@@ -1,4 +1,6 @@
-# GitHub Readme
+# Online Payment System
+![](/Users/veronicatjan/Documents/GitHub/OnlinePay/structure.png)
+其中checkout.html 页面已取消改成弹窗显示预定状态。
 
 # 任务表
 
@@ -26,15 +28,14 @@
     - [x]  英转繁 - 廖
     - [x]  繁转简 - 曾
 - [x]  设立GitHub Repo -曾
-- [ ]  设立云数据库 - 曾
 - [ ]  设置Flask数据库连接 - 曾
 - [ ]  初始化Flask环境 - 曾
 - [ ]  模块化开发
-    - [ ]  周
-        - [ ]  product-detail.html
+    - [x]  周
+        - [x]  product-detail.html
             - [ ]  客户端
             - [ ]  游客端
-        - [ ]  verification.html
+        - [x]  verification.html
             - [ ]  管理员端
     - [ ]  赵
         - [ ]  index.html
@@ -44,8 +45,10 @@
             - [ ]  add.html
             - [ ]  edit.html
             - [ ]  response.html
+       - [ ] 客户端
+       	  - [ ]  搜索.html 
     - [ ]  廖
-        - [ ]  待定?
+        - [ ]  预定下单
     - [ ]  曾
         - [ ]  comment_review.html
 - [ ]  测试报告
@@ -98,21 +101,56 @@
 
 然后通过以下命令安装Flask扩展：(Windows版本)
 
-浏览到 flask\Scripts\目录下 （MacOS 是 flask\bin目录下）
+浏览到 flask.Scripts/目录下 （MacOS 是 flask/bin目录下）  
+用 ```pip install xxx``` 来安装插件  
+下列为需要安装的插件
 
-    pip install flask
-    pip install flask-login
-    pip install flask-openid
-    pip install flask-mail
-    pip install flask-sqlalchemy
-    pip install sqlalchemy-migrate
-    pip install flask-whooshalchemy
-    pip install flask-wtf
-    pip install flask-babel
-    pip install guess_language
-    pip install flipflop
-    pip install coverage
-    
+```
+alembic==0.9.6
+Babel==2.5.1
+blinker==1.4
+certifi==2017.7.27.1
+chardet==3.0.4
+click==6.7
+dominate==2.3.1
+elasticsearch==6.1.1
+Flask==1.0.2
+Flask-Babel==0.11.2
+Flask-Bootstrap==3.3.7.1
+Flask-HTTPAuth==3.2.3
+Flask-Login==0.4.0
+Flask-Mail==0.9.1
+Flask-Migrate==2.1.1
+Flask-Moment==0.5.2
+Flask-MySQL==1.4.0
+Flask-Script==2.0.6
+Flask-SQLAlchemy==2.3.2
+Flask-WTF==0.14.2
+guess-language-spirit==0.5.3
+idna==2.6
+itsdangerous==0.24
+Jinja2==2.10
+Mako==1.0.7
+MarkupSafe==1.0
+mysql==0.0.2
+mysqlclient==1.4.2.post1
+PyJWT==1.5.3
+PyMySQL==0.9.3
+python-dateutil==2.6.1
+python-dotenv==0.7.1
+python-editor==1.0.3
+pytz==2017.2
+redis==2.10.6
+requests==2.18.4
+rq==0.9.2
+six==1.11.0
+SQLAlchemy==1.1.14
+urllib3==1.22
+visitor==0.1.3
+Werkzeug==0.14.1
+WTForms==2.1
+
+```
     
 #运行Flask 服务器访问网站
 打开终端，在目录下 ，运行
