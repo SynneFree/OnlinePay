@@ -8,7 +8,7 @@ from models import manager_query, manager_delete, manager_maintain, username_val
 from models import search_bill, info_modify,loginpswd_modify,paypswd_modify, add_blacklists,delete_blacklists
 from forms import LoginForm, RegistrationForm, RechargeForm, AddManagerForm, DeleteManagerForm, MaintainManagerForm
 from forms import MaintainUserForm, BillForm, ModifyForm, loginpswdmodifyform, paypswdmodifyform,AddBlacklistsForm,DeleteBlacklistsForm
-from __init__ import app
+# from __init__ import app
 
 
 @app.route('/', methods=['POST','GET'])

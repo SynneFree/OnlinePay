@@ -316,12 +316,12 @@ DROP TABLE IF EXISTS `TempGood`;
 CREATE TABLE `TempGood` (
   `TempGoodID` int(11) NOT NULL,
   `GoodName` varchar(255) NOT NULL,
+  `From` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `Dest` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `Price` double(10,2) NOT NULL,
   `SellerID` int(11) NOT NULL,
-  `GoodInfo1` varchar(255) DEFAULT NULL,
-  `GoodInfo2` varchar(255) DEFAULT NULL,
-  `GoodInfo3` enum('经济舱','商务舱','头等舱') DEFAULT NULL,
-  PRIMARY KEY (`GoodName`),
+  `IsReview` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`TempGoodID`),
   KEY `SellerID` (`SellerID`),
   CONSTRAINT `tempgood_ibfk_1` FOREIGN KEY (`SellerID`) REFERENCES `seller` (`SellerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

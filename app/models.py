@@ -1,29 +1,60 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
-from __init__ import app
+mysql = MySQL()
 
 
-def start_database():
-    db = MySQL()
-    db.init_app(app)
-    conn = db.connect()
-    conn.autocommit(1)
-    return conn
+def start_database(is_update=0):
+    con = mysql.get_db()
+    cursor = con.cursor()
+    if not is_update:
+        return cursor
+    else:
+        return con, cursor
 
+def show_good(good_type='hotel',start_limit = 0, end_limit = 9):
+    cursor = start_database()
+    if good_type == 'hotel':
+        cursor.execute(f"SELECT * FROM good WHERE Dest is NULL and IsReview=1 LIMIT {start_limit},{end_limit};")
+    else:
+        cursor.execute(f"SELECT * FROM good WHERE  Dest is not NULL and IsReview=1 LIMIT {start_limit},{end_limit}")
+    data = cursor.fetchall()
+    print(data)
+    if data:
+        return data
+    else:
+        return []
 
-def buyer_valid_login(username:str, password:str):
-    conn = start_database()
-    cursor = conn.cursor()
+def select_good(good_id):
+    cursor = start_database()
+    cursor.execute(f"SELECT * FROM good WHERE GoodID={good_id} and IsReview=1")
+    data = cursor.fetchall()
+    if data:
+        return data[0]
+
+# 查询所有未审核的
+def select_all():
+    cursor = start_database()
+    cursor.execute(f"SELECT * FROM good WHERE IsReview=0")
+    data = cursor.fetchall()
+    if data:
+        return data
+
+def is_pass(good_id):
+    con, cursor = start_database(is_update=1)
+    cursor.execute(f'UPDATE good SET IsReview=1 WHERE GoodID={good_id}')
+    con.commit()
+
+def buyer_valid_login(username: str, password:str):
+    cursor = start_database()
     cursor.execute("SELECT LoginPassword from Buyer where UserName=\'" + username +"\'")
     data = cursor.fetchone()
-    if data is not None and check_password_hash(data[0],password):
+    if data is not None and check_password_hash(data[0], password):
         return True
     return False
 
 
-def search_by_name(username:str):
-    conn = start_database()
-    cursor = conn.cursor()
+def search_by_name(username: str):
+    cursor = start_database()
     cursor.execute("SELECT Username, RealName, Email, Phone from Buyer where UserName=\'" + username + "\'")
     data = cursor.fetchall()
     if data is None:
@@ -36,8 +67,7 @@ def search_by_name(username:str):
 
 
 def search_by_type(type:int):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     if type == 1:
         cursor.execute("SELECT Username, RealName, Email, Phone from Seller")
 
@@ -51,8 +81,7 @@ def search_by_type(type:int):
 
 
 def recharge_valid(cardnumber:str, password:str):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     cursor.execute("SELECT * from rechargecard where Number=\'" + cardnumber +"\'")
     data = cursor.fetchone()
     if data is not None and data[3] == 0 and check_password_hash(data[1], password):
@@ -62,15 +91,12 @@ def recharge_valid(cardnumber:str, password:str):
 
 
 def recharge_value(username:str, value:int):
-    conn = start_database()
-    cursor = conn.cursor()
-
+    cursor = start_database()
     cursor.execute("UPDATE buyer set Balance = Balance + \'" + str(value) +"\'" + "where UserName = \'" + username + "\'")
 
 
 def return_balance(username: str, type:int):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     if type == 1:
         cursor.execute("SELECT Balance from Buyer where UserName=\'" + username +"\'")
     else:
@@ -80,8 +106,7 @@ def return_balance(username: str, type:int):
 
 
 def seller_valid_login(username:str, password:str):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     cursor.execute("SELECT LoginPassword from Seller where UserName=\'" + username +"\'")
     data = cursor.fetchone()
     if data is not None and check_password_hash(data[0],password,):
@@ -92,18 +117,16 @@ def seller_valid_login(username:str, password:str):
 def administrator_valid_login(username:str, password:str):
     if username == 'software':
         return True
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     cursor.execute("SELECT LoginPassword from Administrator where UserName=\'" + username +"\'")
     data = cursor.fetchone()
-    if data is not None and check_password_hash(data[0],password):
+    if data is not None and check_password_hash(data[0], password):
         return True
     return False
 
 
 def citizen_register(realname:str,citizenid:str):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "insert into CitizenIdentity(RealName,CitizenId,Valid) " \
              + "values(\'" + realname + "\','" + str(citizenid)+ "\',0);"
     cursor.execute(insert)
@@ -113,9 +136,7 @@ def buyer_register(data:[]):
     realname = data['realname']
     citizenid = data['citizenid']
     citizen_register(realname, citizenid)
-
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     username = data['username']
     #password = data['password']
     #paypassword = data['paypassword']
@@ -142,9 +163,7 @@ def seller_register(data:[]):
     realname = data['realname']
     citizenid = data['citizenid']
     citizen_register(realname,citizenid)
-
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     username = data['username']
     password = generate_password_hash(data['password'])
     paypassword = generate_password_hash(data['paypassword'])
@@ -164,8 +183,7 @@ def seller_register(data:[]):
 
 
 def manager_register(username:str, password:str, authpassword:str, typeid:str,permission:str):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     password = generate_password_hash(password)
     authpassword = generate_password_hash(authpassword)
     insert = "insert into Administrator(AdministratorId,LoginPassword,AuthenticationPassword,UserName,TypeId,Permission) " \
@@ -195,8 +213,7 @@ def manager_right(value:int)->[]:
 
 
 def manager_query(username:str)->[]:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "select * from Administrator where Username = \'" + username + '\''
     cursor.execute(insert)
     result = cursor.fetchone()
@@ -208,8 +225,7 @@ def manager_query(username:str)->[]:
 
 
 def manager_delete(username:str)->str:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "delete from Administrator where Username = \'" + username + '\''
     cursor.execute(insert)
     insert = "select * from Administrator where Username = \'" + username + '\''
@@ -221,15 +237,13 @@ def manager_delete(username:str)->str:
         return "User Not Found"
 
 def manager_maintain(username:str, permission:int)->str:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "update Administrator SET Permission = \'" + str(permission) + "\' where Username = \'" + username + '\''
     cursor.execute(insert)
 
 
 def username_valid_register(username:str)->str:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "select * from Administrator where Username = \'" + username + '\''
     cursor.execute(insert)
     resulta = cursor.fetchone()
@@ -253,9 +267,7 @@ def search_bill(year, month, username):
     # username = "Zhang"
     year = int(year)
     month = int(month)
-    db = MySQL()
-    db.init_app(app)
-    cursor = db.connect().cursor()
+    cursor = start_database()
     if(month == 0):
         cursor.execute("SELECT "
                        "`OrderNo`, b.`UserName`, s.`UserName`, `GoodName`, `OrderTime`"
@@ -303,8 +315,7 @@ def search_bill(year, month, username):
     return data
 
 def verify_user_register(realname:str,citizenid:str)->bool:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "select * from CitizenIdentity where RealName = \'" + str(realname) + "\' and CitizenId = \'" + str(citizenid) + "\'"
     cursor.execute(insert)
     data = cursor.fetchone()
@@ -313,8 +324,7 @@ def verify_user_register(realname:str,citizenid:str)->bool:
     return False
 
 def user_info_query(username: str) -> []:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "select * from Buyer where UserName = \'" + username + '\''
     cursor.execute(insert)
     result = cursor.fetchone()
@@ -328,8 +338,7 @@ def user_info_query(username: str) -> []:
         return result
 
 def info_modify(username:str, data:[])->str:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
 
 
     if data['email']:
@@ -354,8 +363,7 @@ def info_modify(username:str, data:[])->str:
 
 
 def loginpswd_modify(username:str, data:[])->str:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
 
     cursor.execute("SELECT LoginPassword from Buyer where UserName=\'" + username + "\'")
     data1 = cursor.fetchone()
@@ -374,25 +382,18 @@ def loginpswd_modify(username:str, data:[])->str:
 
 
 def user_info_query(username: str) -> []:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
     insert = "select RealName, CitizenId, Email, Phone, Point from Buyer where UserName = \'" + username + '\''
     cursor.execute(insert)
     result = cursor.fetchall()
     if result:
         return result
 
-    insert = "select RealName, CitizenId, Email, Phone from Seller where UserName = \'" + username + '\''
-    cursor.execute(insert)
-    result = cursor.fetchall()
-    if result:
-        return result
 
 
 
 def paypswd_modify(username:str, data:[])->str:
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
 
     cursor.execute("SELECT PayPassword from Buyer where UserName=\'" + username + "\'")
     data1 = cursor.fetchone()
@@ -411,8 +412,7 @@ def paypswd_modify(username:str, data:[])->str:
 
 
 def add_blacklists(data):
-    conn = start_database()
-    cursor = conn.cursor()
+    cursor = start_database()
 
     print("in!")
     print(data)
@@ -501,3 +501,24 @@ def good_info_query(goodname:str)->[]:
     result = cursor.fetchone()
     return result
 
+def seller_addgood(GoodName:str,From:str,Dest:str,Price:double,SellerId:str):
+    cursor = start_database()
+    insert = "INSERT INTO Good (GoodId,GoodName,From,Dest,Price,SellerId,IsReview)"\
+             + "values(0,\'" + str(GoodName) + "\',\'" + str(From) + "\',\'" + str(Dest) + "\',\'" \
+             + str(Price) + "\','" + str(SellerId) + "\',0);"
+    cursor.execute(insert)
+
+def seller_editgood(GoodName:str,From:str,Dest:str,Price:double,SellerId:str):
+    cursor = start_database()
+    insert = "INSERT INTO TempGood (GoodId,GoodName,From,Dest,Price,SellerId)" \
+             + "values(0,\'" + str(GoodName) + "\',\'" + str(From) + "\',\'" + str(Dest) + "\',\'" \
+             + str(Price) + "\','" + str(SellerId) + "\');"
+    cursor.execute(insert)
+
+def seller_goodlist(sellername: str) -> []:
+    cursor = start_database()
+    insert = "select GoodName from good where sellername = \'" + sellername + '\''
+    cursor.execute(insert)
+    result = cursor.fetchall()
+    if result:
+        return result

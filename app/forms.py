@@ -1,6 +1,6 @@
 from wtforms.fields import simple, core
 from wtforms import Form, validators, widgets, ValidationError
-from models import verify_user_register
+from .models import verify_user_register
 import calendar
 
 
@@ -269,6 +269,25 @@ class DeleteBlacklistsForm(Form):
         label='Submit',
         widget=widgets.SubmitInput())
 
+class AddGoodForm(Form):
+    goodname = simple.StringField(
+        label= 'Goodname',
+        widget=widgets.TextInput(),
+        validators=[validators.DataRequired(message="Goodname can not be empty")])
+    price = simple.FloatField(
+        lable = 'Price',
+        widget=widgets.TextInput(),
+        validators=[validators.DataRequired(message="Price can not be empty")])
+    sellerid = simple.StringField(
+        label='Sellerid',
+        widget=widgets.TextInput(),
+        validators=[validators.DataRequired(message="Sellerid can not be empty")])
+    From = simple.StringField(
+        label = 'From',
+        widget=widgets.TextInput())
+    dest = simple.StringField(
+        label = 'Dest',
+        widget=widgets.TextInput())
 
 
 # **********************************************************
