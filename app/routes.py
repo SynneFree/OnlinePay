@@ -11,12 +11,14 @@ from forms import MaintainUserForm, BillForm, ModifyForm, loginpswdmodifyform, p
 # from __init__ import app
 
 
-@app.route('/', methods=['POST','GET'])
-@app.route('/index', methods=['POST','GET'])
+@app.route('/', methods=['POST', 'GET'])
+@app.route('/tourist_index', methods=['POST', 'GET'])
 def index():
     if request.method == "GET":
         form = LoginForm()
-        return render_template("index.html", form=form)
+        hotels = show_good()
+        planes = show_good(good_type='plane')
+        return render_template("tourist_index.html", form=form, hotels = hotels, planes=planes)
     else:
         form = LoginForm(formdata=request.form)
         if form.validate():
@@ -25,16 +27,15 @@ def index():
             session['username'] = username
             if buyer_valid_login(username, password):
                 session['type'] = 1
-                return redirect(url_for('account'))
-            if seller_valid_login(username, password):
+                return redirect(url_for('index'))
+            elif seller_valid_login(username, password):
                 session['type'] = 0
-                return redirect(url_for('account'))
-            if administrator_valid_login(username, password):
+                return redirect(url_for('index'))
+            elif administrator_valid_login(username, password):
                 session['type'] = 2
                 return redirect(url_for('add_manager'))
-        else:
-            print(form.errors,"错误信息")
-        return render_template("index.html",form=form)
+        is_login = 1
+        return render_template("tourist_index.html", form=form, is_login=is_login)
 
 
 @app.route('/logout',methods=['POST', "GET"])
@@ -347,18 +348,10 @@ def querygoods():
     else:
         return redirect(url_for("index"))
 
-app.route('/')
-@app.route('/tourist_index')
-def index():
-    user = { 'nickname': 'Miguel' } # fake user
-    return render_template("tourist_index.html",title = 'Home',user = user)
-
-
-@app.route('/tourist_product_detail')
-def tourist_product_detail():
-    user = { 'nickname': 'Miguel' } # fake user
-    return render_template('tourist_product_detail.html',title = 'Product detail',user = user)
-
+@app.route('/tourist_product_detail/<int:id>')
+def tourist_product_detail(id):
+    hotel = select_good(id)
+    return render_template('tourist_product_detail.html', title='Product detail', good=good)
 
 @app.route('/admin_comment_review')
 def admin_comment_review():
@@ -366,10 +359,16 @@ def admin_comment_review():
     return render_template('admin_comment_review.html',title = 'Product detail',user = user)
 
 
-@app.route('/admin_verification')
+@app.route('/admin_verification', methods=['POST', 'GET'])
 def admin_verification():
-    user = { 'nickname': 'Miguel' } # fake user
-    return render_template('admin_verification.html',title = 'Product detail',user = user)
+    if request.method == 'GET':
+        goods = select_all()
+        return render_template('admin_verification.html', title='Product detail', goods=goods)
+    elif request.method == 'POST':
+        good_id = request.form['good_id']
+        is_pass(good_id)
+        return json.dumps({'ok': 1})
+
 
 
 @app.route('/buyer_comment')
