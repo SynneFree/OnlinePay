@@ -1,5 +1,5 @@
 # Online Payment System
-![](/Users/veronicatjan/Documents/GitHub/OnlinePay/structure.png)
+![](/structure.png)
 其中checkout.html 页面已取消改成弹窗显示预定状态。
 
 # 任务表
