@@ -36,7 +36,7 @@ class RechargeForm(Form):
 
 class RegistrationForm(Form):
     def validate_realname(self, field):
-        if verify_user_register(self.realname.data,self.citizenid.data):
+        if verify_user_register(self.realname.data, self.citizenid.data):
             pass
         raise ValidationError(u'Real Name not match CitizenId')
 
@@ -52,7 +52,7 @@ class RegistrationForm(Form):
         label='Repeat Password',
         widget=widgets.PasswordInput(),
         validators=[validators.DataRequired(message='Password can not be empty'),
-                    validators.EqualTo('password',message='Two password not same')])
+                    validators.EqualTo('password', message='Two password not same')])
     paypassword = simple.PasswordField(
         label='PayPassword',
         widget=widgets.PasswordInput(),
@@ -61,7 +61,7 @@ class RegistrationForm(Form):
         label='Repeat PayPassword',
         widget=widgets.PasswordInput(),
         validators=[validators.DataRequired(message='Password can not be empty'),
-                    validators.EqualTo('paypassword',message='Two password not same')])
+                    validators.EqualTo('paypassword', message='Two password not same')])
     realname = simple.StringField(
         label='Real name',
         widget=widgets.TextInput(),
@@ -69,7 +69,7 @@ class RegistrationForm(Form):
     citizenid = simple.StringField(
         label='Citizen ID',
         widget=widgets.TextInput(),
-        validators=[validators.DataRequired(message="Citizen ID can not be empty"),validate_realname])
+        validators=[validators.DataRequired(message="Citizen ID can not be empty"), validate_realname])
     email = simple.StringField(
         label='Email',
         widget=widgets.TextInput(),
@@ -201,6 +201,7 @@ class loginpswdmodifyform(Form):
         label='Submit',
         widget=widgets.SubmitInput())
 
+
 class paypswdmodifyform(Form):
     username = simple.StringField(
         label='Username',
@@ -227,7 +228,6 @@ class paypswdmodifyform(Form):
     submit = simple.SubmitField(
         label='Submit',
         widget=widgets.SubmitInput())
-
 
 
 class ModifyForm(Form):
@@ -257,6 +257,7 @@ class AddBlacklistsForm(Form):
         label='Submit',
         widget=widgets.SubmitInput())
 
+
 class DeleteBlacklistsForm(Form):
     username = simple.StringField(
         label='Username',
@@ -269,13 +270,14 @@ class DeleteBlacklistsForm(Form):
         label='Submit',
         widget=widgets.SubmitInput())
 
+
 class AddGoodForm(Form):
     goodname = simple.StringField(
-        label= 'Goodname',
+        label='Goodname',
         widget=widgets.TextInput(),
         validators=[validators.DataRequired(message="Goodname can not be empty")])
-    price = simple.FloatField(
-        lable = 'Price',
+    price = core.FloatField(
+        lable='Price',
         widget=widgets.TextInput(),
         validators=[validators.DataRequired(message="Price can not be empty")])
     sellerid = simple.StringField(
@@ -283,17 +285,16 @@ class AddGoodForm(Form):
         widget=widgets.TextInput(),
         validators=[validators.DataRequired(message="Sellerid can not be empty")])
     From = simple.StringField(
-        label = 'From',
+        label='From',
         widget=widgets.TextInput())
     dest = simple.StringField(
-        label = 'Dest',
+        label='Dest',
         widget=widgets.TextInput())
 
 
 # **********************************************************
 # *********************** Group 3 **************************
 # **********************************************************
-
 
 
 class QueryGoodsForm(Form):

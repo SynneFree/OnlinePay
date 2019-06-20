@@ -1,6 +1,7 @@
+from app import app
 from werkzeug.security import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
-mysql = MySQL()
+mysql = MySQL(app)
 
 
 def start_database(is_update=0):
@@ -501,14 +502,14 @@ def good_info_query(goodname:str)->[]:
     result = cursor.fetchone()
     return result
 
-def seller_addgood(GoodName:str,From:str,Dest:str,Price:double,SellerId:str):
+def seller_addgood(GoodName:str,From:str,Dest:str,Price:float,SellerId:str):
     cursor = start_database()
     insert = "INSERT INTO Good (GoodId,GoodName,From,Dest,Price,SellerId,IsReview)"\
              + "values(0,\'" + str(GoodName) + "\',\'" + str(From) + "\',\'" + str(Dest) + "\',\'" \
              + str(Price) + "\','" + str(SellerId) + "\',0);"
     cursor.execute(insert)
 
-def seller_editgood(GoodName:str,From:str,Dest:str,Price:double,SellerId:str):
+def seller_editgood(GoodName:str,From:str,Dest:str,Price:float,SellerId:str):
     cursor = start_database()
     insert = "INSERT INTO TempGood (GoodId,GoodName,From,Dest,Price,SellerId)" \
              + "values(0,\'" + str(GoodName) + "\',\'" + str(From) + "\',\'" + str(Dest) + "\',\'" \

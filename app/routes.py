@@ -1,13 +1,16 @@
+from app import app
 from flask import render_template, request, url_for, redirect, session
-from models import buyer_valid_login, seller_valid_login, administrator_valid_login
-from models import buyer_register, seller_register, manager_register,user_info_query
-from models import username_valid_register
+from .models import *
+# from .models import buyer_valid_login, seller_valid_login, administrator_valid_login
+# from .models import buyer_register, seller_register, manager_register,user_info_query
+# from .models import username_valid_register
 import pymysql
-from models import recharge_value, return_balance, recharge_valid, search_by_name, search_by_type
-from models import manager_query, manager_delete, manager_maintain, username_valid_register,verify_user_register
-from models import search_bill, info_modify,loginpswd_modify,paypswd_modify, add_blacklists,delete_blacklists
-from forms import LoginForm, RegistrationForm, RechargeForm, AddManagerForm, DeleteManagerForm, MaintainManagerForm
-from forms import MaintainUserForm, BillForm, ModifyForm, loginpswdmodifyform, paypswdmodifyform,AddBlacklistsForm,DeleteBlacklistsForm
+# from .models import recharge_value, return_balance, recharge_valid, search_by_name, search_by_type
+# from .models import manager_query, manager_delete, manager_maintain, username_valid_register,verify_user_register
+# from .models import search_bill, info_modify,loginpswd_modify,paypswd_modify, add_blacklists,delete_blacklists
+from .forms import *
+from .forms import LoginForm, RegistrationForm, RechargeForm, AddManagerForm, DeleteManagerForm, MaintainManagerForm
+from .forms import MaintainUserForm, BillForm, ModifyForm, loginpswdmodifyform, paypswdmodifyform,AddBlacklistsForm,DeleteBlacklistsForm
 # from __init__ import app
 
 
